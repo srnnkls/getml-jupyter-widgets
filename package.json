@@ -1,0 +1,85 @@
+{
+  "name": "getml-jupyter-widgets",
+  "version": "0.1.0",
+  "description": "Jupyter widgets for getML",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension",
+    "widgets"
+  ],
+  "files": [
+    "src/**/*.js",
+    "dist/*.js",
+    "css/*.css"
+  ],
+  "homepage": "https://github.com/getml/getml-jupyter-widgets",
+  "bugs": {
+    "url": "https://github.com/getml/getml-jupyter-widgets/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "getML",
+    "email": "soeren@getml.com"
+  },
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getml/getml-jupyter-widgets"
+  },
+  "scripts": {
+    "build": "npm run res:build && npm run build:nbextension && npm run build:labextension:dev",
+    "build:prod": "npm run res:build && npm run build:nbextension && npm run build:labextension",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "build:nbextension": "webpack",
+    "clean": "npm run clean:lib && npm run clean:nbextension && npm run clean:labextension",
+    "clean:lib": "rimraf lib",
+    "clean:labextension": "rimraf getml_jupyter_widgets/labextension",
+    "clean:nbextension": "rimraf getml_jupyter_widgets/nbextension/static/index.js",
+    "lint": "eslint . --ext .ts,.tsx --fix",
+    "lint:check": "eslint . --ext .ts,.tsx",
+    "prepack": "npm run build:lib",
+    "res:build": "rescript",
+    "res:clean": "rescript clean",
+    "res:dev": "rescript build -w",
+    "test": "jest",
+    "watch": "npm run -p watch:*",
+    "watch:nbextension": "webpack --watch --mode=development",
+    "watch:labextension": "jupyter labextension watch ."
+  },
+  "dependencies": {
+    "@jupyter-widgets/base": "^4.0.0",
+    "@rescript/core": "^0.2.0",
+    "@rescript/react": "^0.11.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rescript": "10.1"
+  },
+  "devDependencies": {
+    "@jupyter-widgets/base-manager": "^1.0.2",
+    "@jupyterlab/builder": "^3.6.3",
+    "@lumino/application": "^1.6.0",
+    "@lumino/widgets": "^1.6.0",
+    "autoprefixer": "^10.4.14",
+    "css-loader": "^6.7.3",
+    "postcss": "^8.4.23",
+    "postcss-loader": "^7.3.0",
+    "rimraf": "^2.6.2",
+    "style-loader": "^3.3.2",
+    "tailwindcss": "^3.3.2",
+    "webpack": "^5.61.0",
+    "webpack-cli": "^4.0.0"
+  },
+  "jupyterlab": {
+    "extension": "src/Plugin.bs",
+    "outputDir": "getml_jupyter_widgets/labextension/",
+    "sharedPackages": {
+      "@jupyter-widgets/base": {
+        "bundled": false,
+        "singleton": true
+      }
+    },
+    "webpackConfig": "./webpack.config.jupyter.js"
+  }
+}

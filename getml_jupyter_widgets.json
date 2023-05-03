@@ -1,0 +1,5 @@
+{
+  "load_extensions": {
+    "getml_jupyter_widgets/extension": true
+  }
+}
