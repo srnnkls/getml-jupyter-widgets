@@ -16,8 +16,8 @@ function DataModel$WidgetPane(props) {
   }
   return JsxRuntime.jsx(JsxRuntime.Fragment, {
               children: Caml_option.some(JsxRuntime.jsx(Tree.Example.make, {
-                        width: 700,
-                        height: 700
+                        width: 1000,
+                        height: 500
                       }))
             });
 }

@@ -15,7 +15,7 @@ module WidgetPane = {
       // <div> {`Population: ${population}`->React.string} </div>
       // <div> {`Peripherals: `->React.string} </div>
       // {Array.map(peripherals, perph => <li key=perph> {perph->React.string} </li>)->React.array}
-      <Tree.Example width=700 height=700 />
+      <Tree.Example width=1000 height=500 />
     </>
   }
 }
