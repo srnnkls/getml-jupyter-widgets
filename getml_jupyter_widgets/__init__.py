@@ -5,7 +5,9 @@
 # Distributed under the terms of the Modified BSD License.
 
 from .example import ExampleWidget
+from .data_model import DataModelWidget
 from ._version import __version__, version_info
+
 
 def _jupyter_labextension_paths():
     """Called by Jupyter Lab Server to detect if it is a valid labextension and
@@ -19,10 +21,12 @@ def _jupyter_labextension_paths():
         from `src` directory into <jupyter path>/labextensions/<dest> directory
         during widget installation
     """
-    return [{
-        'src': 'labextension',
-        'dest': 'getml-jupyter-widgets',
-    }]
+    return [
+        {
+            "src": "labextension",
+            "dest": "getml-jupyter-widgets",
+        }
+    ]
 
 
 def _jupyter_nbextension_paths():
@@ -41,9 +45,11 @@ def _jupyter_nbextension_paths():
     require: Path to importable AMD Javascript module inside the
         <jupyter path>/nbextensions/<dest> directory
     """
-    return [{
-        'section': 'notebook',
-        'src': 'nbextension',
-        'dest': 'getml_jupyter_widgets',
-        'require': 'getml_jupyter_widgets/extension'
-    }]
+    return [
+        {
+            "section": "notebook",
+            "src": "nbextension",
+            "dest": "getml_jupyter_widgets",
+            "require": "getml_jupyter_widgets/extension",
+        }
+    ]

@@ -1,4 +1,3 @@
-import './main.css';
-
 export * from './version';
-export * from './Widget.bs';
+export * from './ExampleWidget.bs';
+export * from './DataModelWidget.bs';

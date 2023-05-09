@@ -1,4 +1,4 @@
-module Widget = {
+module WidgetPane = {
   @react.component
   let make = () => {
     let (name, setName) = WidgetModel.useState("value")
@@ -32,6 +32,6 @@ module ModelContext = {
 @react.component
 let default = (~model) => {
   <ModelContext model>
-    <Widget />
+    <WidgetPane />
   </ModelContext>
 }

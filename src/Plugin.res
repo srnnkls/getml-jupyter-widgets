@@ -26,7 +26,15 @@ module JsPackage = {
   external name: string = "MODULE_NAME"
 }
 
-@module external widget: Widget.t = "./Widget.bs"
+@module("./ExampleWidget.bs") external exampleWidgetModel: DOMWidget.model = "ExampleWidgetModel"
+@module("./ExampleWidget.bs") external exampleWidgetView: DOMWidget.view = "ExampleWidgetView"
+@module("./DataModelWidget.bs")
+external dataModelWidgetModel: DOMWidget.model = "DataModelWidgetModel"
+@module("./DataModelWidget.bs")
+external dataModelWidgetView: DOMWidget.view = "DataModelWidgetView"
+
+// @module external dataModelWidget: Dict.t<'a> = "./DataModelWidget.bs"
+// @module external exampleModelWidget: Dict.t<'a> = "./ExampleModelWidget.bs"
 
 type plugin = {
   id: string,
@@ -43,7 +51,13 @@ let activateWidgetExtension = (_app, registry) => {
     {
       "name": JsPackage.name,
       "version": JsPackage.version,
-      "exports": widget,
+      // "exports": dataModelWidget,
+      "exports": {
+        "DataModelWidgetModel": dataModelWidgetModel,
+        "DataModelWidgetView": dataModelWidgetView,
+        "ExampleWidgetModel": exampleWidgetModel,
+        "ExampleWidgetView": exampleWidgetView,
+      },
     },
   )
 }

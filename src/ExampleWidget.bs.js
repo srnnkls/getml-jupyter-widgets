@@ -4,11 +4,11 @@
 import './main.css';
 ;
 
-import {DOMWidgetModel} from '@jupyter-widgets/base';
+import { DOMWidgetModel } from '@jupyter-widgets/base';
 import { MODULE_NAME, MODULE_VERSION } from './version';
 
 
-export class ExampleModel extends DOMWidgetModel {
+export class ExampleWidgetModel extends DOMWidgetModel {
   defaults() {
     return {
       ...super.defaults(),
@@ -25,14 +25,14 @@ export class ExampleModel extends DOMWidgetModel {
 }
 ;
 
-import {DOMWidgetView} from '@jupyter-widgets/base';
-import ReactWidget from "./ReactWidget.bs"
+import { DOMWidgetView } from '@jupyter-widgets/base';
+import Example from "./components/Example.bs"
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-export class ExampleView extends DOMWidgetView {
+export class ExampleWidgetView extends DOMWidgetView {
   render() {
-    const component = React.createElement(ReactWidget, {
+    const component = React.createElement(Example, {
       model: this.model,
     });
     ReactDOM.render(component, this.el);
@@ -41,8 +41,8 @@ export class ExampleView extends DOMWidgetView {
 ;
 
 var metaData = {
-  modelName: "ExampleModel",
-  viewName: "ExampleView"
+  modelName: "ExampleWidgetModel",
+  viewName: "ExampleWidgetView"
 };
 
 var defaultModelProperties = {
