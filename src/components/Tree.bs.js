@@ -183,7 +183,7 @@ var $$default = {
   top: 0,
   left: 0,
   right: 0,
-  bottom: 0
+  bottom: 30
 };
 
 var Margin = {
@@ -303,8 +303,7 @@ function Tree(props) {
                       width: width$1
                     }),
                 tmp
-              ],
-              className: ""
+              ]
             });
 }
 
