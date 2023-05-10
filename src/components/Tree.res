@@ -53,6 +53,7 @@ module LinearGradient = {
 module D3 = {
   type rec treeNode = {
     name: string,
+    on?: string,
     children?: array<treeNode>,
   }
 
@@ -84,16 +85,24 @@ module D3 = {
 }
 
 let rawTree: D3.treeNode = {
-  name: "paper",
+  name: "blaaaa",
   children: [
     {
       name: "cites",
-      children: [{name: "content"}, {name: "paper"}],
+      on: "paper_id = cited_paper_id",
+      children: [
+        {name: "content", on: "citing_paper_id = paper_id"},
+        {name: "paper", on: "citing_paper_id = paper_id"},
+      ],
     },
-    {name: "content"},
+    {name: "content", on: "paper_id"},
     {
       name: "cites",
-      children: [{name: "content"}, {name: "paper"}],
+      on: "paper_id = citing_paper_id",
+      children: [
+        {name: "content", on: "cited_paper_id = paper_id"},
+        {name: "paper", on: "cited_paper_id = paper_id"},
+      ],
     },
   ],
 }
@@ -117,6 +126,14 @@ module Event = {
 }
 
 module Tooltip = {
+  @module("@visx/tooltip") @val external defaultStyles: ReactDOMStyle.t = "defaultStyles"
+  let styles = {
+    ...defaultStyles,
+    minWidth: "60",
+    borderRadius: "0.25rem",
+    backgroundColor: "rgba(0,0,0,0.7)",
+    color: "white",
+  }
   type data = {
     tooltipLeft: float,
     tooltipTop: float,
@@ -135,7 +152,13 @@ module Tooltip = {
   external use: unit => t = "useTooltip"
 
   @module("@visx/tooltip") @react.component
-  external make: (~left: float, ~top: float, ~children: React.element) => React.element = "Tooltip"
+  external make: (
+    ~left: float,
+    ~top: float,
+    ~className: string=?,
+    ~style: 'style=?,
+    ~children: React.element,
+  ) => React.element = "Tooltip"
 }
 
 module LinkHorizontal = {
@@ -215,7 +238,7 @@ module PeripheralNode = {
 }
 
 module Node = {
-  let widthRaw = 40.0
+  let widthRaw = 45.0
   let heightRaw = 25.0
   let x = -.(widthRaw /. 2.0)->Float.toString
   let y = -.(heightRaw /. 2.0)->Float.toString
@@ -240,10 +263,11 @@ module Margin = {
 module Example = {
   // let data = React.useMemo(_ => D3.hierarchy(rawTree))
   type origin = {x: float, y: float}
-  let data = D3.hierarchy(rawTree)
 
   @react.component
-  let make = (~width, ~height, ~margin=Margin.default) => {
+  let make = (~data, ~width, ~height, ~margin=Margin.default) => {
+    let data = D3.hierarchy(data)
+
     let innerHeight = height->Int.toFloat -. margin.top -. margin.bottom
     let innerWidth = width->Int.toFloat -. margin.left -. margin.right
 
@@ -323,11 +347,16 @@ module Example = {
         ? {
             let parent = tooltipData.source
             let child = tooltipData.target
-            <Tooltip top={tooltipTop} left={tooltipLeft}>
-              <div className="mb-3">
+            <Tooltip top={tooltipTop} left={tooltipLeft} style=Tooltip.styles>
+              <div className="mb-3 text-[12px]">
                 {`${parent.data.name} → ${child.data.name}`->React.string}
               </div>
-              <div> {"on: "->React.string} </div>
+              <div className="text-[9px]">
+                {switch child.data.on {
+                | Some(join) => `on: ${join}`->React.string
+                | None => React.null
+                }}
+              </div>
             </Tooltip>
           }
         : React.null}

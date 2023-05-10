@@ -8,14 +8,9 @@ import * as JsxRuntime from "react/jsx-runtime";
 
 function DataModel$WidgetPane(props) {
   var match = WidgetModel.useState("tree");
-  var children = match[0].children;
-  if (children !== undefined) {
-    children.map(function (child) {
-          return child.name;
-        });
-  }
   return JsxRuntime.jsx(JsxRuntime.Fragment, {
               children: Caml_option.some(JsxRuntime.jsx(Tree.Example.make, {
+                        data: match[0],
                         width: 1000,
                         height: 500
                       }))

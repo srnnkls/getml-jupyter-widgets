@@ -35,9 +35,6 @@ dependencies = [
 ]
 version = "0.1.0.dev0"
 
-[project.license]
-file = "LICENSE.txt"
-
 [project.optional-dependencies]
 docs = [
     "jupyter_sphinx",

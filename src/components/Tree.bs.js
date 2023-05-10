@@ -54,33 +54,40 @@ var D3 = {};
 var rawTree_children = [
   {
     name: "cites",
+    on: "paper_id = cited_paper_id",
     children: [
       {
-        name: "content"
+        name: "content",
+        on: "citing_paper_id = paper_id"
       },
       {
-        name: "paper"
+        name: "paper",
+        on: "citing_paper_id = paper_id"
       }
     ]
   },
   {
-    name: "content"
+    name: "content",
+    on: "paper_id"
   },
   {
     name: "cites",
+    on: "paper_id = citing_paper_id",
     children: [
       {
-        name: "content"
+        name: "content",
+        on: "cited_paper_id = paper_id"
       },
       {
-        name: "paper"
+        name: "paper",
+        on: "cited_paper_id = paper_id"
       }
     ]
   }
 ];
 
 var rawTree = {
-  name: "paper",
+  name: "blaaaa",
   children: rawTree_children
 };
 
@@ -88,7 +95,19 @@ var Tree = {};
 
 var $$Event$1 = {};
 
-var Tooltip$1 = {};
+var newrecord = Caml_obj.obj_dup(Tooltip.defaultStyles);
+
+newrecord.borderRadius = "0.25rem";
+
+newrecord.minWidth = "60";
+
+newrecord.color = "white";
+
+newrecord.backgroundColor = "rgba(0,0,0,0.7)";
+
+var Tooltip$1 = {
+  styles: newrecord
+};
 
 var LinkHorizontal = {};
 
@@ -164,11 +183,11 @@ var PeripheralNode = {
   make: Tree$PeripheralNode
 };
 
-var x = (- (40.0 / 2.0)).toString();
+var x = (- (45.0 / 2.0)).toString();
 
 var y = (- (25.0 / 2.0)).toString();
 
-var width = (40.0).toString();
+var width = (45.0).toString();
 
 var height = (25.0).toString();
 
@@ -190,7 +209,7 @@ function Tree$Node(props) {
 }
 
 var $$Node = {
-  widthRaw: 40.0,
+  widthRaw: 45.0,
   heightRaw: 25.0,
   x: x,
   y: y,
@@ -210,13 +229,12 @@ var Margin = {
   $$default: $$default
 };
 
-var data = Hierarchy.hierarchy(rawTree);
-
 function Tree$Example(props) {
   var margin = props.margin;
   var height = props.height;
   var width = props.width;
   var margin$1 = margin !== undefined ? margin : $$default;
+  var data = Hierarchy.hierarchy(props.data);
   var innerHeight = height - margin$1.top - margin$1.bottom;
   var innerWidth = width - margin$1.left - margin$1.right;
   var origin_x = innerWidth / 2.0;
@@ -237,16 +255,19 @@ function Tree$Example(props) {
   if (match.tooltipOpen) {
     var parent = tooltipData.source;
     var child = tooltipData.target;
+    var join = child.data.on;
     tmp = JsxRuntime.jsxs(Tooltip.Tooltip, {
           left: match.tooltipLeft,
           top: match.tooltipTop,
+          style: newrecord,
           children: [
             JsxRuntime.jsx("div", {
                   children: "" + parent.data.name + " → " + child.data.name + "",
-                  className: "mb-3"
+                  className: "mb-3 text-[12px]"
                 }),
             JsxRuntime.jsx("div", {
-                  children: "on: "
+                  children: join !== undefined ? "on: " + join + "" : null,
+                  className: "text-[9px]"
                 })
           ]
         });
@@ -336,7 +357,6 @@ function Tree$Example(props) {
 }
 
 var Example = {
-  data: data,
   make: Tree$Example
 };
 
@@ -359,4 +379,4 @@ export {
   Margin ,
   Example ,
 }
-/* x Not a pure module */
+/* newrecord Not a pure module */

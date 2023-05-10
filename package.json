@@ -20,7 +20,7 @@
   "license": "BSD-3-Clause",
   "author": {
     "name": "getML",
-    "email": "soeren@getml.com"
+    "email": "info@getml.com"
   },
   "main": "src/index.js",
   "repository": {
@@ -29,12 +29,12 @@
   },
   "scripts": {
     "build": "npm run build:res && npm run build:nbextension && npm run build:labextension:dev",
+    "build:res": "rescript",
     "build:prod": "npm run build:res && npm run build:nbextension && npm run build:labextension",
     "build:labextension": "jupyter labextension build .",
     "build:labextension:dev": "jupyter labextension build --development True .",
     "build:nbextension": "webpack",
-    "build:res": "rescript",
-    "clean": "npm run clean:lib && npm run clean:nbextension && npm run clean:labextension",
+    "clean": "npm run clean:nbextension && npm run clean:labextension && npm run clean:res",
     "clean:labextension": "rimraf getml_jupyter_widgets/labextension",
     "clean:nbextension": "rimraf getml_jupyter_widgets/nbextension/static/index.js",
     "clean:res": "rescript clean",
@@ -47,6 +47,8 @@
     "@jupyter-widgets/base": "^4.0.0",
     "@rescript/core": "^0.2.0",
     "@rescript/react": "^0.11.0",
+    "@visx/event": "^3.0.1",
+    "@visx/tooltip": "^3.1.2",
     "d3-shape": "^3.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
