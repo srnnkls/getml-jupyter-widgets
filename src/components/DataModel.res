@@ -1,22 +1,8 @@
 module WidgetPane = {
   @react.component
   let make = () => {
-    let (tree: Tree.D3.treeNode, _) = WidgetModel.useState("tree")
-
-    // let population = tree.name
-    // let peripherals = switch tree.children {
-    // | Some(children) => Array.map(children, child => child.name)
-    // | None => [""]
-    // }
-
-    // <div> {"Hello you"->React.string} </div>
-
-    <>
-      // <div> {`Population: ${population}`->React.string} </div>
-      // <div> {`Peripherals: `->React.string} </div>
-      // {Array.map(peripherals, perph => <li key=perph> {perph->React.string} </li>)->React.array}
-      <Tree.Example data=tree width=1000 height=500 />
-    </>
+    let (tree: Visx.D3.treeNode, _) = WidgetModel.useState("tree")
+      <Tree data=Data.rawTree width=600 height=500 />
   }
 }
 
