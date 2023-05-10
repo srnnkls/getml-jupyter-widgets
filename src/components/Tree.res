@@ -42,7 +42,6 @@ module Colors = {
   }
 }
 
-
 module PopulationNode = {
   @react.component
   let make = (~node: D3.hierarchyNode) => {
@@ -112,6 +111,68 @@ module Node = {
   }
 }
 
+module Link = {
+  @react.component
+  let make = (~data: D3.link, ~stroke, ~strokeWidth, ~fill, ~onMouseLeave, ~onMouseMove) => {
+    let {
+      tooltipOpen,
+      tooltipLeft,
+      tooltipTop,
+      tooltipData,
+      hideTooltip,
+      showTooltip,
+    } = Tooltip.use()
+    let (tooltipTimeout, setTooltipTimeout) = React.useState(_ => None)
+    <div>
+      <Group top=data.y left=data.x>
+        <LinkRadial data stroke strokeWidth fill />
+        <LinkRadial
+          data
+          stroke="transparent"
+          strokeWidth="10"
+          fill="none"
+          onMouseLeave
+          onMouseMove
+          onMouseLeave={_ => {
+            setTooltipTimeout(_ => Some(setTimeout(() => {
+                hideTooltip()
+              }, 300)))
+          }}
+          onMouseMove={event => {
+            switch tooltipTimeout {
+            | Some(timeout) => clearTimeout(timeout)
+            | None => ()
+            }
+            let eventSvgCoords = Event.localPoint(event)
+            showTooltip({
+              tooltipData: data,
+              tooltipTop: eventSvgCoords.y,
+              tooltipLeft: eventSvgCoords.x,
+            })
+          }}
+        />
+      </Group>
+      {tooltipOpen
+        ? {
+            let parent = tooltipData.source
+            let child = tooltipData.target
+            <Tooltip top={tooltipTop} left={tooltipLeft} style=Tooltip.styles>
+              <div className="mb-3 text-[11px]">
+                {`${parent.data.name} → ${child.data.name}`->React.string}
+              </div>
+              <div className="text-[10px]">
+                {switch child.data.on {
+                | Some(join) => `on: ${join}`->React.string
+                | None => React.null
+                }}
+              </div>
+            </Tooltip>
+          }
+        : React.null}
+    </div>
+  }
+}
+
 module Margin = {
   type t = {top: int, left: int, right: int, bottom: int}
   let default = {top: 0, left: 0, right: 0, bottom: 0}
@@ -136,83 +197,27 @@ let make = (~data, ~width, ~height, ~margin=Margin.default) => {
   let height = height->Int.toString
   let width = width->Int.toString
 
-  let {
-    tooltipOpen,
-    tooltipLeft,
-    tooltipTop,
-    tooltipData,
-    hideTooltip,
-    showTooltip,
-  } = Tooltip.use()
-
-  let (tooltipTimeout, setTooltipTimeout) = React.useState(_ => None)
-  <div className="">
-    <svg width={width} height={height}>
-      <LinearGradient id="population-gradient" from={Colors.hex(#peach)} to={Colors.hex(#plum)} />
-      <Tree
-        root=data
-        size=(sizeWidth, sizeHeight)
-        separation={(a, b) => (a.parent == b.parent ? 1.0 : 2.0) /. a.depth->Int.toFloat}>
-        {tree =>
-          <Group top={origin.y} left={origin.x}>
-            {D3.links(tree)
-            ->Array.mapWithIndex((link, i) => {
-              let key = i->Int.toString
-              <Group top={link.y} left={link.x} key>
-                <LinkRadial
-                  data=link stroke={Colors.hex(#lightpurple)} strokeWidth="1" fill="none"
-                />
-                <LinkRadial
-                  data=link
-                  stroke="transparent"
-                  strokeWidth="10"
-                  fill="none"
-                  onMouseLeave={_ => {
-                    setTooltipTimeout(_ => Some(setTimeout(() => {
-                      hideTooltip()
-                    }, 300)))
-                  }}
-                  onMouseMove={event => {
-                    switch tooltipTimeout {
-                    | Some(timeout) => clearTimeout(timeout)
-                    | None => ()
-                    }
-                    let eventSvgCoords = Event.localPoint(event)
-                    showTooltip({
-                      tooltipData: link,
-                      tooltipTop: eventSvgCoords.y,
-                      tooltipLeft: eventSvgCoords.x,
-                    })
-                  }}
-                />
-              </Group>
-            })
-            ->React.array}
-            {D3.descendants(tree)
-            ->Array.mapWithIndex((node, i) => {
-              let key = i->Int.toString
-              <Node node key />
-            })
-            ->React.array}
-          </Group>}
-      </Tree>
-    </svg>
-    {tooltipOpen
-      ? {
-          let parent = tooltipData.source
-          let child = tooltipData.target
-          <Tooltip top={tooltipTop} left={tooltipLeft} style=Tooltip.styles>
-            <div className="mb-3 text-[11px]">
-              {`${parent.data.name} → ${child.data.name}`->React.string}
-            </div>
-            <div className="text-[10px]">
-              {switch child.data.on {
-              | Some(join) => `on: ${join}`->React.string
-              | None => React.null
-              }}
-            </div>
-          </Tooltip>
-        }
-      : React.null}
-  </div>
+  <svg width={width} height={height}>
+    <LinearGradient id="population-gradient" from={Colors.hex(#peach)} to={Colors.hex(#plum)} />
+    <Tree
+      root=data
+      size=(sizeWidth, sizeHeight)
+      separation={(a, b) => (a.parent == b.parent ? 1.0 : 2.0) /. a.depth->Int.toFloat}>
+      {tree =>
+        <Group top={origin.y} left={origin.x}>
+          {D3.links(tree)
+          ->Array.mapWithIndex((link, i) => {
+            let key = i->Int.toString
+            <Link data=link stroke={Colors.hex(#lightpurple)} strokeWidth="1" fill="none" key />
+          })
+          ->React.array}
+          {D3.descendants(tree)
+          ->Array.mapWithIndex((node, i) => {
+            let key = i->Int.toString
+            <Node node key />
+          })
+          ->React.array}
+        </Group>}
+    </Tree>
+  </svg>
 }

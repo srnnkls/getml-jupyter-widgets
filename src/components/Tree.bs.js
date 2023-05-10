@@ -151,6 +151,34 @@ var $$Node = {
   make: Tree$Node
 };
 
+function Tree$Link(props) {
+  var data = props.data;
+  return JsxRuntime.jsxs(Group.Group, {
+              top: data.y,
+              left: data.x,
+              children: [
+                JsxRuntime.jsx(Shape.LinkRadial, {
+                      data: data,
+                      stroke: props.stroke,
+                      strokeWidth: props.strokeWidth,
+                      fill: props.fill
+                    }),
+                JsxRuntime.jsx(Shape.LinkRadial, {
+                      data: data,
+                      stroke: "transparent",
+                      strokeWidth: "10",
+                      fill: "none",
+                      onMouseLeave: props.onMouseLeave,
+                      onMouseMove: props.onMouseMove
+                    })
+              ]
+            });
+}
+
+var Link = {
+  make: Tree$Link
+};
+
 var $$default = {
   top: 0,
   left: 0,
@@ -235,41 +263,29 @@ function Tree(props) {
                                               children: [
                                                 tree.links().map(function (link, i) {
                                                       var key = i.toString();
-                                                      return JsxRuntime.jsxs(Group.Group, {
-                                                                  top: link.y,
-                                                                  left: link.x,
-                                                                  children: [
-                                                                    JsxRuntime.jsx(Shape.LinkRadial, {
-                                                                          data: link,
-                                                                          stroke: hex("lightpurple"),
-                                                                          strokeWidth: "1",
-                                                                          fill: "none"
-                                                                        }),
-                                                                    JsxRuntime.jsx(Shape.LinkRadial, {
-                                                                          data: link,
-                                                                          stroke: "transparent",
-                                                                          strokeWidth: "10",
-                                                                          fill: "none",
-                                                                          onMouseLeave: (function (param) {
-                                                                              Curry._1(setTooltipTimeout, (function (param) {
-                                                                                      return Caml_option.some(setTimeout((function (param) {
-                                                                                                        Curry._1(hideTooltip, undefined);
-                                                                                                      }), 300));
-                                                                                    }));
-                                                                            }),
-                                                                          onMouseMove: (function ($$event) {
-                                                                              if (tooltipTimeout !== undefined) {
-                                                                                clearTimeout(Caml_option.valFromOption(tooltipTimeout));
-                                                                              }
-                                                                              var eventSvgCoords = $$Event.localPoint($$event);
-                                                                              Curry._1(showTooltip, {
-                                                                                    tooltipLeft: eventSvgCoords.x,
-                                                                                    tooltipTop: eventSvgCoords.y,
-                                                                                    tooltipData: link
-                                                                                  });
-                                                                            })
-                                                                        })
-                                                                  ]
+                                                      return JsxRuntime.jsx(Tree$Link, {
+                                                                  data: link,
+                                                                  stroke: hex("lightpurple"),
+                                                                  strokeWidth: "1",
+                                                                  fill: "none",
+                                                                  onMouseLeave: (function (param) {
+                                                                      Curry._1(setTooltipTimeout, (function (param) {
+                                                                              return Caml_option.some(setTimeout((function (param) {
+                                                                                                Curry._1(hideTooltip, undefined);
+                                                                                              }), 300));
+                                                                            }));
+                                                                    }),
+                                                                  onMouseMove: (function ($$event) {
+                                                                      if (tooltipTimeout !== undefined) {
+                                                                        clearTimeout(Caml_option.valFromOption(tooltipTimeout));
+                                                                      }
+                                                                      var eventSvgCoords = $$Event.localPoint($$event);
+                                                                      Curry._1(showTooltip, {
+                                                                            tooltipLeft: eventSvgCoords.x,
+                                                                            tooltipTop: eventSvgCoords.y,
+                                                                            tooltipData: link
+                                                                          });
+                                                                    })
                                                                 }, key);
                                                     }),
                                                 tree.descendants().map(function (node, i) {
@@ -301,6 +317,7 @@ export {
   PopulationNode ,
   PeripheralNode ,
   $$Node ,
+  Link ,
   Margin ,
   make ,
 }
