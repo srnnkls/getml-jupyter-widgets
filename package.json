@@ -52,7 +52,7 @@
     "d3-shape": "^3.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "rescript": "10.1"
+    "rescript": "^11.0.0-alpha.6"
   },
   "devDependencies": {
     "@jupyter-widgets/base-manager": "^1.0.2",
