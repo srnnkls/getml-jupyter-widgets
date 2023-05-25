@@ -1,4 +1,3 @@
-@module("@jupyter-widgets/base")
 type t
 
 @module("@jupyter-widgets/base") @new external make: unit => t = "WidgetModel"

@@ -13,6 +13,13 @@ module Math = {
   external min: array<float> => float = "min"
 }
 
+module XMLSerializer = {
+  type t
+
+  @new external make: unit => t = "XMLSerializer"
+  @send external serializeToString: (t, Dom.element) => string = "serializeToString"
+}
+
 module Colors = {
   type t = [
     | #peach
@@ -148,8 +155,25 @@ let make = (~data, ~width, ~height, ~margin=Margin.default) => {
   let {tooltipOpen, tooltipLeft, tooltipTop, tooltipData, hideTooltip, showTooltip} = Tooltip.use()
   let (tooltipTimeout, setTooltipTimeout) = React.useState(_ => None)
 
+  let svgEl = React.useRef(Nullable.null)
+
+  let (_, setSerializedSvg) = WidgetModel.useState("serialized_svg")
+
+  React.useEffect1(() => {
+    // serialize svg
+    let serializer = XMLSerializer.make()
+    switch svgEl.current->Nullable.toOption {
+    | Some(el) =>
+      let serialized = XMLSerializer.serializeToString(serializer, el)
+      setSerializedSvg(serialized, ())
+    | _ => ()
+    }
+
+    Some(_ => ())
+  }, [data])
+
   <div>
-    <svg width={width} height={height}>
+    <svg width={width} height={height} ref={ReactDOM.Ref.domRef(svgEl)}>
       <LinearGradient id="population-gradient" from={Colors.hex(#peach)} to={Colors.hex(#plum)} />
       <Tree
         root=data

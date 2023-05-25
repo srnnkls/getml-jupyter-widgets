@@ -45,18 +45,19 @@
   },
   "dependencies": {
     "@jupyter-widgets/base": "^4.0.0",
-    "@rescript/core": "^0.2.0",
+    "@rescript/core": "^0.3.1",
     "@rescript/react": "^0.11.0",
     "@visx/event": "^3.0.1",
     "@visx/tooltip": "^3.1.2",
     "d3-shape": "^3.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "rescript": "10.1"
+    "rescript": "^11.0.0-alpha.6",
+    "rescript-core": "github:rescript-association/rescript-core#rescript-v11"
   },
   "devDependencies": {
     "@jupyter-widgets/base-manager": "^1.0.2",
-    "@jupyterlab/builder": "^3.6.3",
+    "@jupyterlab/builder": "^4.0.0",
     "@lumino/application": "^1.6.0",
     "@lumino/widgets": "^1.6.0",
     "@visx/gradient": "latest",

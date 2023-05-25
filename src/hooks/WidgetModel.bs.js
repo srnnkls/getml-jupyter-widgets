@@ -29,7 +29,7 @@ function useEvent($$event, callback, deps, param) {
       model,
       undefined
     ];
-  React.useEffect((function () {
+  React.useEffect((function (param) {
           var callbackWrapper = function (param) {
             Curry._1(callback, model);
           };
@@ -42,7 +42,7 @@ function useEvent($$event, callback, deps, param) {
 
 function useState(name) {
   var model = React.useContext(context);
-  var match = React.useState(function () {
+  var match = React.useState(function (param) {
         return model.get(name);
       });
   var setState = match[1];
@@ -51,7 +51,7 @@ function useState(name) {
             return model.get(name);
           }));
   };
-  useEvent("change:" + name + "", callback, [name], undefined);
+  useEvent("change:" + name, callback, [name], undefined);
   var updateModel = function (val, options) {
     model.set(name, val, options);
     model.save_changes();
