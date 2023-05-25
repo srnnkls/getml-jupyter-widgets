@@ -60,8 +60,11 @@ class DataModelWidget(DOMWidget):
 
     def _update_outputs(self, display_data):
         for out in self._output_cell_refs:
-            out.update({**self._repr_mimebundle_(), **display_data}, raw=True)
+            out.update({**super()._repr_mimebundle_(), **display_data}, raw=True)
 
     def _ipython_display_(self):
-        ref = display(self._repr_mimebundle_(), raw=True, display_id=True)
+        ref = display(super()._repr_mimebundle_(), raw=True, display_id=True)
         self._output_cell_refs.add(ref)
+
+    def _repr_mimebundle_(self, **kwargs):
+        pass
