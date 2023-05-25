@@ -12,7 +12,7 @@ type rec tree = {
   children?: array<tree>,
 }
 
-type modelProps = {tree: tree}
+type modelProps = {tree: tree, serialized_svg: string}
 
 let metaData = {
   modelName: "DataModelWidgetModel",
@@ -21,6 +21,7 @@ let metaData = {
 
 let defaultModelProperties = {
   tree: {name: "population", children: [{name: "peripheral"}]},
+  serialized_svg: "",
 }
 
 // model

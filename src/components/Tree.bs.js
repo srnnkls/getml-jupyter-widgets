@@ -9,6 +9,7 @@ import * as $$Event from "@visx/event";
 import * as Group from "@visx/group";
 import * as Shape from "@visx/shape";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
+import * as WidgetModel from "../hooks/WidgetModel.bs.js";
 import * as Tooltip from "@visx/tooltip";
 import * as Gradient from "@visx/gradient";
 import * as Hierarchy from "@visx/hierarchy";
@@ -17,6 +18,8 @@ import * as JsxRuntime from "react/jsx-runtime";
 var $$Window = {};
 
 var $$Math = {};
+
+var $$XMLSerializer = {};
 
 function hex(name) {
   if (name === "white") {
@@ -88,7 +91,7 @@ function Tree$PeripheralNode(props) {
                       height: props.height,
                       width: props.width,
                       onClick: (function (param) {
-                          window.alert("clicked: " + node.data.name + "");
+                          window.alert("clicked: " + node.data.name);
                         }),
                       fill: hex("background"),
                       rx: "12",
@@ -208,11 +211,25 @@ function Tree(props) {
   var tooltipData = match.tooltipData;
   var showTooltip = match.showTooltip;
   var hideTooltip = match.hideTooltip;
-  var match$1 = React.useState(function () {
+  var match$1 = React.useState(function (param) {
         
       });
   var setTooltipTimeout = match$1[1];
   var tooltipTimeout = match$1[0];
+  var svgEl = React.useRef(null);
+  var match$2 = WidgetModel.useState("serialized_svg");
+  var setSerializedSvg = match$2[1];
+  React.useEffect((function (param) {
+          var serializer = new XMLSerializer();
+          var el = svgEl.current;
+          if (!(el == null)) {
+            var serialized = serializer.serializeToString(el);
+            Curry._2(setSerializedSvg, serialized, undefined);
+          }
+          return (function (param) {
+                    
+                  });
+        }), [data]);
   var tmp;
   if (match.tooltipOpen) {
     var parent = tooltipData.source;
@@ -224,11 +241,11 @@ function Tree(props) {
           style: Visx.Tooltip.styles,
           children: [
             JsxRuntime.jsx("div", {
-                  children: "" + parent.data.name + " → " + child.data.name + "",
+                  children: parent.data.name + " → " + child.data.name,
                   className: "mb-3 text-[11px]"
                 }),
             JsxRuntime.jsx("div", {
-                  children: join !== undefined ? "on: " + join + "" : null,
+                  children: join !== undefined ? "on: " + join : null,
                   className: "text-[10px]"
                 })
           ]
@@ -299,6 +316,7 @@ function Tree(props) {
                                 })
                             })
                       ],
+                      ref: Caml_option.some(svgEl),
                       height: height$1,
                       width: width$1
                     }),
@@ -312,6 +330,7 @@ var make = Tree;
 export {
   $$Window ,
   $$Math ,
+  $$XMLSerializer ,
   Colors ,
   PopulationNode ,
   PeripheralNode ,

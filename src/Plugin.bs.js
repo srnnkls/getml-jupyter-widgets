@@ -33,7 +33,7 @@ var dataModelWidgetModel = DataModelWidgetBs.DataModelWidgetModel;
 
 var dataModelWidgetView = DataModelWidgetBs.DataModelWidgetView;
 
-var extensionId = "" + name + ":plugin";
+var extensionId = name + ":plugin";
 
 function activateWidgetExtension(_app, registry) {
   registry.registerWidget({

@@ -4,13 +4,16 @@
 import './main.css';
 ;
 
+var defaultModelProperties_tree = {
+  name: "population",
+  children: [{
+      name: "peripheral"
+    }]
+};
+
 var defaultModelProperties = {
-  tree: {
-    name: "population",
-    children: [{
-        name: "peripheral"
-      }]
-  }
+  tree: defaultModelProperties_tree,
+  serialized_svg: ""
 };
 
 import {DOMWidgetModel} from '@jupyter-widgets/base';
