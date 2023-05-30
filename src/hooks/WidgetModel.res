@@ -4,10 +4,11 @@ type t
 @get external getName: t => string = "name"
 @set external setName: (t, string) => unit = "name"
 @send external get: (option<t>, string) => 'values = "get"
-@send external set: (option<t>, string, string, 'values) => unit = "set"
+@send external set: (option<t>, string, 'values, 'options) => unit = "set"
 @send external on: (option<t>, string, unit => unit) => unit = "on"
 @send external unbind: (option<t>, string, unit => unit) => unit = "unbind"
 @send external saveChanges: option<t> => unit = "save_changes"
+@send external send: (option<t>, JSON.t) => unit = "send"
 
 module Context = {
   let context = React.createContext(None)
@@ -40,6 +41,14 @@ let useEvent = (~event, ~callback, ~deps: option<array<string>>=?, ()) => {
 
     Some(cleanup)
   }, dependencies)
+}
+
+let useComm = () => {
+  let model = use()
+  let sendMsg = message => {
+    send(model, JSON.parseExn(message))
+  }
+  sendMsg
 }
 
 let useState = name => {

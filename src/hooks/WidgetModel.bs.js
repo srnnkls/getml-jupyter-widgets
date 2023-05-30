@@ -40,6 +40,13 @@ function useEvent($$event, callback, deps, param) {
         }), dependencies);
 }
 
+function useComm(param) {
+  var model = React.useContext(context);
+  return function (message) {
+    model.send(JSON.parse(message));
+  };
+}
+
 function useState(name) {
   var model = React.useContext(context);
   var match = React.useState(function (param) {
@@ -66,6 +73,7 @@ export {
   Context ,
   use ,
   useEvent ,
+  useComm ,
   useState ,
 }
 /* context Not a pure module */

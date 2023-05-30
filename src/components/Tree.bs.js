@@ -226,9 +226,7 @@ function Tree(props) {
             var serialized = serializer.serializeToString(el);
             Curry._2(setSerializedSvg, serialized, undefined);
           }
-          return (function (param) {
-                    
-                  });
+          
         }), [data]);
   var tmp;
   if (match.tooltipOpen) {

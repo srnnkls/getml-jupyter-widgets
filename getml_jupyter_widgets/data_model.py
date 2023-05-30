@@ -3,10 +3,16 @@ Kernel-level representation of a getML datamodel.
 """
 
 from ipywidgets import DOMWidget
-from IPython.display import display, publish_display_data
+from IPython.display import display, display_html, publish_display_data
 from ipywidgets.widgets.widget import _put_buffers, _show_traceback
 from traitlets import Unicode, Dict
+import traitlets
 from ._frontend import module_name, module_version
+
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
 class DataModelWidget(DOMWidget):
@@ -30,41 +36,19 @@ class DataModelWidget(DOMWidget):
     )
     serialized_svg = Unicode("").tag(sync=True)
 
-    @_show_traceback
-    def _handle_msg(self, msg):
-        """Called when a msg is received from the front-end"""
-        data = msg["content"]["data"]
-        method = data["method"]
-
-        if method == "update":
-            self._update_outputs(
-                {
-                    "text/html": data["state"]["serialized_svg"],
-                }
-            )
-
-            if "state" in data:
-                state = data["state"]
-                if "buffer_paths" in data:
-                    _put_buffers(state, data["buffer_paths"], msg["buffers"])
-                self.set_state(state)
-
-        # Handle a state request.
-        elif method == "request_state":
-            self.send_state()
-
-        # Handle a custom msg from the front-end.
-        elif method == "custom":
-            if "content" in data:
-                self._handle_custom_msg(data["content"], msg["buffers"])
-
-    def _update_outputs(self, display_data):
-        for out in self._output_cell_refs:
-            out.update({**super()._repr_mimebundle_(), **display_data}, raw=True)
+    # hook into serialized_svg trait updates
+    @traitlets.observe("serialized_svg")
+    def _update_outputs(self, change):
+        text_html = {
+            "text/html": change["new"],
+        }
+        mimebundle = {**self._repr_mimebundle_(), **text_html}
+        for ref in self._output_cell_refs:
+            ref.update(mimebundle, raw=True)
 
     def _ipython_display_(self):
-        ref = display(super()._repr_mimebundle_(), raw=True, display_id=True)
-        self._output_cell_refs.add(ref)
-
-    def _repr_mimebundle_(self, **kwargs):
-        pass
+        text_html = {"text/html": self.serialized_svg}
+        mimebundle = {**self._repr_mimebundle_(), **text_html}
+        ref = display(mimebundle, raw=True, display_id=True)
+        if ref not in self._output_cell_refs:
+            self._output_cell_refs.add(ref)

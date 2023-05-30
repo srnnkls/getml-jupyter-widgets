@@ -169,7 +169,7 @@ let make = (~data, ~width, ~height, ~margin=Margin.default) => {
     | _ => ()
     }
 
-    Some(_ => ())
+    None
   }, [data])
 
   <div>
